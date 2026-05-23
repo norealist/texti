@@ -64,17 +64,22 @@ class Editor
                 bool shift = (key.Modifiers & ConsoleModifiers.Shift)   != 0;
 
                 // ── Ctrl+<key> shortcuts ─────────────────────
-                if (ctrl)
+                // We check both key.Key and key.KeyChar (e.g. \x13 for Ctrl+S) to support various terminals & layouts.
+                bool isCtrlS = (ctrl && key.Key == ConsoleKey.S) || key.KeyChar == '\x13';
+                bool isCtrlF = (ctrl && key.Key == ConsoleKey.F) || key.KeyChar == '\x06';
+                bool isCtrlZ = (ctrl && key.Key == ConsoleKey.Z) || key.KeyChar == '\x1a';
+                bool isCtrlC = (ctrl && key.Key == ConsoleKey.C) || key.KeyChar == '\x03';
+                bool isCtrlX = (ctrl && key.Key == ConsoleKey.X) || key.KeyChar == '\x18';
+                bool isCtrlV = (ctrl && key.Key == ConsoleKey.V) || key.KeyChar == '\x16';
+
+                if (isCtrlS || isCtrlF || isCtrlZ || isCtrlC || isCtrlX || isCtrlV)
                 {
-                    switch (key.Key)
-                    {
-                        case ConsoleKey.S: Save();       break;
-                        case ConsoleKey.F: _search.Open(); break;
-                        case ConsoleKey.Z: Undo();       break;
-                        case ConsoleKey.C: Copy();       break;
-                        case ConsoleKey.X: Cut();        break;
-                        case ConsoleKey.V: Paste();      break;
-                    }
+                    if (isCtrlS) Save();
+                    else if (isCtrlF) _search.Open();
+                    else if (isCtrlZ) Undo();
+                    else if (isCtrlC) Copy();
+                    else if (isCtrlX) Cut();
+                    else if (isCtrlV) Paste();
                     continue;
                 }
 
@@ -119,6 +124,10 @@ class Editor
 
                     case ConsoleKey.Tab:
                         HandleTab();
+                        break;
+
+                    case ConsoleKey.F2:
+                        Save();
                         break;
 
                     case ConsoleKey.Escape:
@@ -329,15 +338,19 @@ class Editor
         {
             var key = Console.ReadKey(true);
 
-            switch (char.ToUpperInvariant(key.KeyChar))
+            char c = char.ToUpperInvariant(key.KeyChar);
+            if (c == 'S' || c == 'Ы' || key.Key == ConsoleKey.S)
             {
-                case 'S':
-                    Save();
-                    return true;
-                case 'D':
-                    return true;
-                case 'C':
-                    return false;
+                Save();
+                return true;
+            }
+            if (c == 'D' || c == 'В' || key.Key == ConsoleKey.D)
+            {
+                return true;
+            }
+            if (c == 'C' || c == 'С' || key.Key == ConsoleKey.C)
+            {
+                return false;
             }
 
             if (key.Key == ConsoleKey.Escape)

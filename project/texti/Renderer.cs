@@ -219,7 +219,7 @@ class Renderer
 
         // Right part: shortcuts
         string right =
-            $"{DimFg}│ {ShortcutFg}Ctrl+S {DimFg}Сохр {DimFg}│ " +
+            $"{DimFg}│ {ShortcutFg}Ctrl+S/F2 {DimFg}Сохр {DimFg}│ " +
             $"{ShortcutFg}Ctrl+F {DimFg}Поиск {DimFg}│ " +
             $"{ShortcutFg}Ctrl+Z {DimFg}Отмена {DimFg}│ " +
             $"{ShortcutFg}Esc {DimFg}Выход ";
